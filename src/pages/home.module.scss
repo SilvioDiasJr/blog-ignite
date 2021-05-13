@@ -1,1 +1,46 @@
-// TODO
+.postCard {
+  width: 100%;
+  margin-bottom: 3rem;
+
+  a {
+    transition: .3s all;
+    
+    &:hover {
+      h1 {
+        color: var(--hightlight)
+      }
+    }
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    line-height: 2.125rem;
+    color: var(--heading);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    line-height: 1.375rem;
+    color: var(--body);
+    margin-bottom: 1.462rem;
+  }
+}
+
+.postCardFooter{
+  display: flex;
+
+  span {
+    margin-right: 2rem;
+    font-size: 0.875rem;
+    color: var(--info);
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+
+    svg {
+      margin-right: 0.4rem;
+      font-size: 1rem;
+    }
+  }
+}
