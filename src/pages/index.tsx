@@ -30,11 +30,11 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const { results, next_page } = postsPagination
-  const [posts, setPosts] = useState<Post[]>(results)
+  const [posts, setPosts] = useState(postsPagination.results)
+  const [pagination, setPagination] = useState(postsPagination.next_page)
 
   function handleMorePost() {
-    fetch(next_page)
+    fetch(pagination)
       .then((response) => response.json())
       .then(data => {
         const newPost = data.results.map((post: Post) => {
@@ -52,10 +52,10 @@ export default function Home({ postsPagination }: HomeProps) {
             }
           }
         })
-        setPosts([...newPost, ...posts])
+        setPosts([...posts, ...newPost])
+        setPagination(data.next_page)
       })
   }
-
   return (
     <>
       <Head>
@@ -83,11 +83,14 @@ export default function Home({ postsPagination }: HomeProps) {
           </div>
         ))}
 
-        <a
-          onClick={() => handleMorePost()}
-        >
-          Carregar mais posts
-        </a>
+        {pagination && (
+          <a
+          className={styles.buttonMorePosts}
+            onClick={() => handleMorePost()}
+          >
+            Carregar mais posts
+          </a>
+        )}
       </main>
     </>
   )
