@@ -44,3 +44,16 @@
     }
   }
 }
+
+.buttonMorePosts {
+  color: var(--hightlight);
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.375rem;
+  cursor: pointer;
+  transition: filter .3s all;
+
+  &:hover {
+    filter: brightness(.9);
+  }
+}
