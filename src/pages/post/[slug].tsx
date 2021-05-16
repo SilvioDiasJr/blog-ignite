@@ -44,7 +44,7 @@ export default function Post({ post }: PostProps) {
     count += headingWords.length
     count += bodyWords.length
 
-    return 4
+    return Math.ceil(count / 200)
   }, 0)
 
   if (router.isFallback)
