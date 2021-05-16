@@ -62,40 +62,42 @@ export default function Post({ post }: PostProps) {
         <img src={post.data.banner.url} alt='banner' />
       </div>
       <main className={commonStyles.containerContent}>
-        <h1>{post.data.title}</h1>
+        <div className={styles.content}>
+          <h1>{post.data.title}</h1>
 
-        <div className={styles.info}>
-          <span>
-            <FiCalendar />
-            {format(new Date(post.first_publication_date),
-              'dd MMM yyyy',
-              { locale: ptBR }
-            )}
-          </span>
-          <span>
-            <FiUser />
-            {post.data.author}
-          </span>
-          <div>
-            <FiClock />
-            <span>{`${readingTime} min`}</span>
+          <div className={styles.info}>
+            <span>
+              <FiCalendar />
+              {format(new Date(post.first_publication_date),
+                'dd MMM yyyy',
+                { locale: ptBR }
+              )}
+            </span>
+            <span>
+              <FiUser />
+              {post.data.author}
+            </span>
+            <span>
+              <FiClock />
+              {`${readingTime} min`}
+            </span>
           </div>
-        </div>
 
-        <article className={styles.containerContent}>
-          {post.data.content.map(post => (
-            <section
-              className={styles.content}
-              key={post.heading}
-            >
-              <p>{post.heading}</p>
-              <div
-                dangerouslySetInnerHTML={{ __html: RichText.asHtml(post.body) }}
-              />
-            </section>
-          )
-          )}
-        </article>
+          <article className={styles.containerContent}>
+            {post.data.content.map(post => (
+              <section
+                className={styles.contentPost}
+                key={post.heading}
+              >
+                <h1>{post.heading}</h1>
+                <div
+                  dangerouslySetInnerHTML={{ __html: RichText.asHtml(post.body) }}
+                />
+              </section>
+            )
+            )}
+          </article>
+        </div>
       </main>
     </>
   )
