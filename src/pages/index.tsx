@@ -36,7 +36,7 @@ interface HomeProps {
 export default function Home({ postsPagination, preview }: HomeProps): JSX.Element {
   const [posts, setPosts] = useState(postsPagination.results)
   const [pagination, setPagination] = useState(postsPagination.next_page)
-  console.log(preview)
+  
   function handleMorePost() {
     fetch(pagination)
       .then((response) => response.json())
