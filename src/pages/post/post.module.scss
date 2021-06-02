@@ -1,22 +1,30 @@
 .banner {
-  img{
+  img {
     width: 100%;
     max-height: 400px;
   }
 }
 
 .content {
-  h1{
-    font-size: 3rem;
+  h1 {
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--heading);
     margin-top: 70px;
+  }
+
+  span {
+    margin-right: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--info);
+    display: flex;
+    align-items: center;
   }
 }
 
 .info {
   display: flex;
-  margin-top: 25px;
+  margin: 25px 0 10px;
 
   span {
     margin-right: 1.5rem;
@@ -33,7 +41,7 @@
   }
 }
 
-.contentPost{
+.contentPost {
   h1 {
     font-size: 2rem;
     color: var(--heading);
@@ -44,5 +52,31 @@
     margin: 20px 0;
     font-size: 1.125rem;
     color: var(--body);
+    text-align: justify;
+  }
+}
+
+.pagination {
+  margin-top: 50px;
+  padding: 50px 0;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--info);
+
+  a:last-of-type, 
+  div:last-of-type {
+    text-align: end;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--heading);
+    font-weight: normal;
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--hightlight);
   }
 }
