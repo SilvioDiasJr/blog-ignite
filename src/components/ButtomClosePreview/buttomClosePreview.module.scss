@@ -1,0 +1,13 @@
+.buttomClose{
+  max-width: 700px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--heading);
+  margin: 80px 0 50px;
+  
+  color: var(--background);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
