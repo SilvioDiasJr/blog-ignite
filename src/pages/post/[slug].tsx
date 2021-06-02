@@ -6,15 +6,20 @@ import Head from 'next/head';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale';
+import Link from 'next/link';
 
 import { getPrismicClient } from '../../services/prismic';
+import Header from '../../components/Header';
+import Comments from '../../components/Comments';
+import { ButtomClosePreview } from '../../components/ButtomClosePreview';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
-import Header from '../../components/Header';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
+  uid: string;
   data: {
     title: string;
     banner: {
@@ -32,9 +37,12 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  preview: boolean;
+  previousPost: Post | null;
+  nextPost: Post | null;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, preview, previousPost, nextPost }: PostProps) {
   const router = useRouter()
 
   const readingTime = post.data.content.reduce((count, content) => {
@@ -82,6 +90,14 @@ export default function Post({ post }: PostProps) {
               {`${readingTime} min`}
             </span>
           </div>
+          {post.last_publication_date && (
+            <span>
+              * editado em
+              {format(new Date(post.last_publication_date),
+                " dd MMM yyyy', às 'HH:mm", { locale: ptBR })}
+            </span>
+          )}
+
 
           <article className={styles.containerContent}>
             {post.data.content.map(post => (
@@ -98,6 +114,35 @@ export default function Post({ post }: PostProps) {
             )}
           </article>
         </div>
+
+        <div className={styles.pagination}>
+          <div>
+            {previousPost && (
+              <Link href={`/post/${previousPost.uid}`}>
+                <a>
+                  <p>{previousPost.data.title}</p>
+                  <span>Post anterior</span>
+                </a>
+              </Link>
+            )}
+          </div>
+
+          <div>
+            {nextPost && (
+              <Link href={`/post/${nextPost.uid}`}>
+                <a>
+                  <p>{nextPost.data.title}</p>
+                  <span >Próximo post</span>
+                </a>
+              </Link>
+            )}
+          </div>
+        </div>
+        <Comments />
+
+        {preview && (
+          <ButtomClosePreview />
+        )}
       </main>
     </>
   )
@@ -121,13 +166,39 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
-export const getStaticProps: GetStaticProps = async context => {
+export const getStaticProps: GetStaticProps = async ({
+  params,
+  preview = false,
+  previewData
+}) => {
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('posts', String(context.params.slug), {})
+  const { slug } = params
+  const response = await prismic.getByUID('posts', String(slug), {
+    ref: previewData?.ref ?? null
+  })
 
+  const previousPost = (
+    await prismic.query(Prismic.predicates.at('document.type', 'posts'), {
+      pageSize: 1,
+      after: response.id,
+      orderings: '[document.first_publication_date desc]',
+      fetch: ['post.title'],
+    })
+  ).results[0];
+
+  const nextPost = (
+    await prismic.query(Prismic.predicates.at('document.type', 'posts'), {
+      pageSize: 1,
+      after: response.id,
+      orderings: '[document.first_publication_date]',
+      fetch: ['post.title'],
+    })
+  ).results[0];
+  
   const posts = {
     uid: response.uid,
     first_publication_date: response.first_publication_date,
+    last_publication_date: response.last_publication_date,
     data: {
       title: response.data.title,
       subtitle: response.data.subtitle,
@@ -142,6 +213,10 @@ export const getStaticProps: GetStaticProps = async context => {
   return {
     props: {
       post: posts,
-    }
+      preview,
+      previousPost: previousPost ?? null,
+      nextPost: nextPost ?? null
+    },
+    revalidate: 60 * 60 * 24, // 24 horas
   }
 };
